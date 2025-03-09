@@ -1,10 +1,9 @@
-import 'dart:io';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:valbury_test/screen/album/album_screen.dart';
 import 'package:valbury_test/screen/favorite/favorite_screen.dart';
 import 'package:valbury_test/screen/post/post_screen.dart';
+import 'package:valbury_test/screen/profile/profile_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -13,7 +12,8 @@ class DashboardScreen extends StatefulWidget {
   State<DashboardScreen> createState() => _DashboardScreenState();
 }
 
-class _DashboardScreenState extends State<DashboardScreen> {
+class _DashboardScreenState extends State<DashboardScreen>
+    with SingleTickerProviderStateMixin {
   int _bottomNavIndex = 0;
 
   final List<Widget> _listWidget = [
@@ -23,12 +23,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
   ];
 
   final List<BottomNavigationBarItem> _bottomNavBarItems = [
-    BottomNavigationBarItem(
-      icon: Icon(Icons.newspaper),
-      label: 'Post',
-    ),
+    BottomNavigationBarItem(icon: Icon(Icons.newspaper), label: 'Post'),
     BottomNavigationBarItem(icon: Icon(Icons.image_outlined), label: 'Album'),
-    BottomNavigationBarItem(icon: Icon(Icons.bookmark_outline), label: 'Favorite'),
+    BottomNavigationBarItem(
+      icon: Icon(Icons.bookmark_outline),
+      label: 'Favorite',
+    ),
   ];
 
   void _onBottomNavTapped(int index) {
@@ -43,17 +43,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _listWidget[_bottomNavIndex],
+      body: IndexedStack(index: _bottomNavIndex, children: _listWidget),
       appBar: AppBar(
         actions: [
-          IconButton(onPressed: (){}, icon: Icon(Icons.person_outlined))
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ProfileScreen()),
+              );
+            },
+            icon: Icon(Icons.person_outlined),
+          ),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(

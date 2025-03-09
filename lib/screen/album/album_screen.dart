@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:valbury_test/screen/album/album_notifier.dart';
 import 'package:valbury_test/widget/album_item.dart';
 
 class AlbumScreen extends StatefulWidget {
@@ -10,6 +13,24 @@ class AlbumScreen extends StatefulWidget {
 }
 
 class _AlbumScreenState extends State<AlbumScreen> {
+  late SharedPreferences prefs;
+  var userId = 0;
+
+  @override
+  void initState() {
+    super.initState();
+
+    getDataLogin();
+  }
+
+  Future<void> getDataLogin() async {
+    prefs = await SharedPreferences.getInstance();
+    userId = (prefs.getInt('userId') ?? 0);
+    Future.microtask(() {
+      Provider.of<AlbumNotifier>(context, listen: false).fetchAlbumList(userId);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -20,13 +41,33 @@ class _AlbumScreenState extends State<AlbumScreen> {
           child: Text('ALBUMS', style: GoogleFonts.montserrat(fontSize: 20)),
         ),
         Expanded(
-          child: GridView.builder(
-            itemCount: 3,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-            ),
-            itemBuilder: (_, index) {
-              return AlbumItem();
+          child: Consumer<AlbumNotifier>(
+            builder: (context, data, child) {
+              return RefreshIndicator(
+                onRefresh: () async {
+                  Provider.of<AlbumNotifier>(
+                    context,
+                    listen: false,
+                  ).fetchAlbumList(1);
+                },
+                child: GridView.builder(
+                  itemCount: data.albumList.length,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                  ),
+                  itemBuilder: (_, index) {
+                    return Padding(
+                      padding: const EdgeInsets.only(
+                        left: 10,
+                        right: 10,
+                        top: 10,
+                        bottom: 25,
+                      ),
+                      child: AlbumItem(albumModel: data.albumList[index]),
+                    );
+                  },
+                ),
+              );
             },
           ),
         ),

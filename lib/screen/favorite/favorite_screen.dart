@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:valbury_test/screen/album/album_screen.dart';
-import 'package:valbury_test/screen/post/post_screen.dart';
+import 'package:provider/provider.dart';
+import 'package:valbury_test/screen/album/album_notifier.dart';
+import 'package:valbury_test/widget/album_item.dart';
+
+import '../../widget/post_item.dart';
+import '../post/post_notifier.dart';
 
 class FavoriteScreen extends StatefulWidget {
   const FavoriteScreen({super.key});
@@ -14,8 +18,6 @@ class _FavoriteScreenState extends State<FavoriteScreen>
   TabController? _tabController;
 
   var tabList = [const Tab(text: 'Post'), const Tab(text: 'Album')];
-
-  int _selectedIndex = 0;
 
   @override
   void initState() {
@@ -49,7 +51,42 @@ class _FavoriteScreenState extends State<FavoriteScreen>
       ),
       body: TabBarView(
         controller: _tabController,
-        children: [Postscreen(), AlbumScreen()],
+        children: [
+          Consumer<PostNotifier>(
+            builder: (context, data, child) {
+              return ListView.builder(
+                itemBuilder: (_, index) {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: PostItem(postModel: data.postFavoriteList[index]),
+                  );
+                },
+                itemCount: data.postFavoriteList.length,
+              );
+            },
+          ),
+          Consumer<AlbumNotifier>(
+            builder: (context, data, child) {
+              return GridView.builder(
+                itemCount: data.albumFavoriteList.length,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                ),
+                itemBuilder: (_, index) {
+                  return Padding(
+                    padding: const EdgeInsets.only(
+                      left: 10,
+                      right: 10,
+                      top: 10,
+                      bottom: 25,
+                    ),
+                    child: AlbumItem(albumModel: data.albumFavoriteList[index]),
+                  );
+                },
+              );
+            },
+          ),
+        ],
       ),
     );
   }
