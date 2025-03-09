@@ -1,5 +1,9 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:valbury_test/helper/helper_online_status.dart';
 import 'package:valbury_test/screen/album/album_screen.dart';
 import 'package:valbury_test/screen/favorite/favorite_screen.dart';
 import 'package:valbury_test/screen/post/post_screen.dart';
@@ -15,6 +19,8 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen>
     with SingleTickerProviderStateMixin {
   int _bottomNavIndex = 0;
+
+  late HelperOnlineStatus helperOnlineStatus;
 
   final List<Widget> _listWidget = [
     const Postscreen(),
@@ -40,6 +46,16 @@ class _DashboardScreenState extends State<DashboardScreen>
   @override
   void initState() {
     super.initState();
+
+    helperOnlineStatus = GetIt.instance<HelperOnlineStatus>();
+    helperOnlineStatus.initConnectivity();
+    helperOnlineStatus.subscribeConnectivity();
+  }
+
+  @override
+  void dispose() {
+    helperOnlineStatus.cancelConnectivitySubscription();
+    super.dispose();
   }
 
   @override
@@ -48,6 +64,31 @@ class _DashboardScreenState extends State<DashboardScreen>
       body: IndexedStack(index: _bottomNavIndex, children: _listWidget),
       appBar: AppBar(
         actions: [
+          Consumer<HelperOnlineStatus>(
+            builder: (context, data, child) {
+              var connection = data.connectionStatus;
+              var isConnectedToInternet =
+                  connection.isNotEmpty &&
+                  connection[0] != ConnectivityResult.none;
+              return Row(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      color: isConnectedToInternet ? Colors.green : Colors.red,
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    width: 10,
+                    height: 10,
+                  ),
+                  SizedBox(width: 10),
+                  Text(
+                    isConnectedToInternet ? 'Online' : 'Offline',
+                    style: GoogleFonts.montserrat(),
+                  ),
+                ],
+              );
+            },
+          ),
           IconButton(
             onPressed: () {
               Navigator.push(

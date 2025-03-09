@@ -12,7 +12,7 @@ class LoginNotifier extends BaseNotifier {
   LoginNotifier(this._getLogin);
 
   ProfileModel _profileModel = ProfileModel();
-  bool isAuthenticated = false;
+  bool? isAuthenticated;
 
   ProfileModel get profileModel => _profileModel;
 
@@ -46,10 +46,14 @@ class LoginNotifier extends BaseNotifier {
           isAuthenticated = true;
 
           saveDataLogin(context);
+        } else {
+          isAuthenticated = false;
         }
 
-        stateLogin = RequestState.loaded;
-        notifyListeners();
+        Future.delayed(const Duration(milliseconds: 2000), () {
+          stateLogin = RequestState.loaded;
+          notifyListeners();
+        });
       },
     );
   }

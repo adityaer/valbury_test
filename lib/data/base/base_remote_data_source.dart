@@ -3,12 +3,16 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:valbury_test/environment/environment.dart';
 import 'package:valbury_test/util/exception.dart';
 
 class BaseRemoteDataSource {
   final Dio client;
-  final BASE_URL = dotenv.env['BASE_URL'];
-  final LOGIN_URL = dotenv.env['LOGIN_URL'];
+  //final BASE_URL = dotenv.env['BASE_URL'];
+
+  final BASE_URL = Platform.environment.containsKey('FLUTTER_TEST')
+      ? 'https://my-json-server.typicode.com/adityaer/demo'
+      : Environment.baseUrl;
 
   BaseRemoteDataSource({required this.client});
 

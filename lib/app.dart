@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_http_formatter/dio_http_formatter.dart';
 import 'package:get_it/get_it.dart';
@@ -9,6 +12,7 @@ import 'package:valbury_test/domain/usecase/remote/get_myalbum_list.dart';
 import 'package:valbury_test/domain/usecase/remote/get_myalbumdetail_list.dart';
 import 'package:valbury_test/domain/usecase/remote/get_mycommentpost_list.dart';
 import 'package:valbury_test/domain/usecase/remote/get_mypost_list.dart';
+import 'package:valbury_test/helper/helper_online_status.dart';
 import 'package:valbury_test/screen/album/album_notifier.dart';
 import 'package:valbury_test/screen/login/login_notifier.dart';
 import 'package:valbury_test/screen/post/post_notifier.dart';
@@ -40,7 +44,13 @@ class App {
         ),
       );
 
+    Connectivity _connectivity = Connectivity();
+
     locator.registerLazySingleton(() => dio);
+
+    locator.registerLazySingleton(() => _connectivity);
+
+    locator.registerLazySingleton(() => HelperOnlineStatus(locator()));
 
     locator.registerFactory(() => PostNotifier(locator(), locator()));
 
@@ -65,4 +75,6 @@ class App {
       () => AppRemoteDataSourceImpl(client: locator()),
     );
   }
+
+  static Future<void> initConnectivity() async {}
 }

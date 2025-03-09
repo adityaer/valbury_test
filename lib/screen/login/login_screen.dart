@@ -5,8 +5,10 @@ import 'package:local_auth/local_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:valbury_test/helper/helper_enum.dart';
+import 'package:valbury_test/helper/helper_online_status.dart';
 import 'package:valbury_test/screen/dashboard/dashboard_screen.dart';
 import 'package:valbury_test/screen/login/login_notifier.dart';
+import 'package:valbury_test/widget/progress_dot.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -27,11 +29,14 @@ class _LoginScreenState extends State<LoginScreen> {
 
   TextEditingController tecEmail = TextEditingController();
   TextEditingController tecPassword = TextEditingController();
+  late HelperOnlineStatus helperOnlineStatus;
 
   @override
   void initState() {
     super.initState();
+
     getDataLogin();
+
     auth.isDeviceSupported().then(
       (bool isSupported) => setState(
         () =>
@@ -88,9 +93,9 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Text(
                 _supportState == SupportState.supported
                     ? isFingerPrint
-                        ? 'Biometric supported'
-                        : 'Biometric disabled'
-                    : 'Biometric not Supported',
+                        ? 'Fingerprint supported'
+                        : 'Fingerprint disabled'
+                    : 'Fingerprint not Supported',
                 style: GoogleFonts.montserrat(fontStyle: FontStyle.italic),
               ),
             ),
@@ -106,7 +111,7 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Container(
         padding: EdgeInsets.all(20),
         width: 300,
-        height: 300,
+        height: 375,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(15),
@@ -151,24 +156,11 @@ class _LoginScreenState extends State<LoginScreen> {
               },
             ),
             Container(height: 20),
-            // TextField(
-            //   controller: tecPassword,
-            //   decoration: InputDecoration(
-            //     border: OutlineInputBorder(
-            //       borderRadius: BorderRadius.circular(15),
-            //     ),
-            //     labelText: 'Password',
-            //     labelStyle: GoogleFonts.montserrat(),
-            //   ),
-            //   onChanged: (text) {
-            //     setState(() {});
-            //   },
-            // ),
             TextField(
               controller: tecPassword,
-              // cursorColor: ColorConstant.kPrimaryColor,
               decoration: InputDecoration(
                 suffixIcon: IconButton(
+                  key: Key('button_login'),
                   icon: Icon(
                     isObscureText ? Icons.visibility_off : Icons.visibility,
                   ),
@@ -192,26 +184,57 @@ class _LoginScreenState extends State<LoginScreen> {
               obscureText: isObscureText,
             ),
             Container(height: 15),
-            TextButton(
-              onPressed: () {
-                context.read<LoginNotifier>().doLogin(
-                  context,
-                  tecEmail.text,
-                  tecPassword.text,
-                );
+            Consumer<LoginNotifier>(
+              builder: (context, data, child) {
+                return data.stateLogin == RequestState.loading
+                    ? WidgetDotBounce(color: Colors.blue)
+                    : TextButton(
+                      onPressed: () {
+                        context.read<LoginNotifier>().doLogin(
+                          context,
+                          tecEmail.text,
+                          tecPassword.text,
+                        );
+                      },
+                      style: ButtonStyle(
+                        padding: WidgetStateProperty.resolveWith((state) {
+                          return EdgeInsets.symmetric(
+                            horizontal: 60,
+                            vertical: 10,
+                          );
+                        }),
+                        backgroundColor: WidgetStateProperty.resolveWith((
+                          state,
+                        ) {
+                          return Colors.blueAccent;
+                        }),
+                        foregroundColor: WidgetStateProperty.resolveWith((
+                          state,
+                        ) {
+                          return Colors.white;
+                        }),
+                      ),
+                      child: Text('Login', style: GoogleFonts.montserrat()),
+                    );
               },
-              style: ButtonStyle(
-                padding: WidgetStateProperty.resolveWith((state) {
-                  return EdgeInsets.symmetric(horizontal: 60, vertical: 10);
-                }),
-                backgroundColor: WidgetStateProperty.resolveWith((state) {
-                  return Colors.blueAccent;
-                }),
-                foregroundColor: WidgetStateProperty.resolveWith((state) {
-                  return Colors.white;
-                }),
-              ),
-              child: Text('Login', style: GoogleFonts.montserrat()),
+            ),
+            SizedBox(height: 15),
+            Consumer<LoginNotifier>(
+              builder: (context, data, child) {
+                return data.stateLogin == RequestState.loading
+                    ? Container()
+                    : data.isAuthenticated != null
+                    ? Text(
+                      data.isAuthenticated!
+                          ? ''
+                          : 'Credential anda tidak sesuai, mohon coba kembali!',
+                      style: GoogleFonts.montserrat(
+                        color: Colors.red,
+                        fontSize: 17,
+                      ),
+                    )
+                    : Container();
+              },
             ),
           ],
         ),

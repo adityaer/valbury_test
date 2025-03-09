@@ -94,4 +94,4 @@ gradlew
 gradlew.bat
 
 #Coverage generated
-/coverage
+#/coverage

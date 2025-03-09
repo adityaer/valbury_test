@@ -3,12 +3,11 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:valbury_test/app.dart';
 import 'package:valbury_test/environment/environment.dart';
+import 'package:valbury_test/helper/helper_online_status.dart';
 import 'package:valbury_test/screen/album/album_notifier.dart';
-import 'package:valbury_test/screen/dashboard/dashboard_screen.dart';
 import 'package:valbury_test/screen/login/login_notifier.dart';
 import 'package:valbury_test/screen/login/login_screen.dart';
 import 'package:valbury_test/screen/post/post_notifier.dart';
-import 'package:valbury_test/screen/splashscreen/splash_screen.dart';
 
 void main() async {
   Environment.flavorName = 'develop';
@@ -28,6 +27,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => App.locator<PostNotifier>()),
         ChangeNotifierProvider(create: (_) => App.locator<AlbumNotifier>()),
         ChangeNotifierProvider(create: (_) => App.locator<LoginNotifier>()),
+        ChangeNotifierProvider(create: (_) => App.locator<HelperOnlineStatus>()),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
