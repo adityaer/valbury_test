@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:valbury_test/constant/string_constant.dart';
 import 'package:valbury_test/helper/helper_enum.dart';
 import 'package:valbury_test/helper/helper_online_status.dart';
 import 'package:valbury_test/screen/dashboard/dashboard_screen.dart';
@@ -70,37 +71,45 @@ class _LoginScreenState extends State<LoginScreen> {
             alignment: Alignment.bottomCenter,
             child: Image.asset('assets/images/valbury_2.jpeg', height: 75),
           ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Transform.translate(
-              offset: Offset(0, -100),
-              child: IconButton(
-                onPressed: () {
-                  if (isFingerPrint) _authenticateWithBiometrics();
-                },
-                icon: Icon(
-                  Icons.fingerprint,
-                  size: 50,
-                  color: isFingerPrint ? Colors.blueAccent : Colors.grey,
-                ),
-              ),
-            ),
-          ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Transform.translate(
-              offset: Offset(0, -85),
-              child: Text(
-                _supportState == SupportState.supported
-                    ? isFingerPrint
-                        ? 'Fingerprint supported'
-                        : 'Fingerprint disabled'
-                    : 'Fingerprint not Supported',
-                style: GoogleFonts.montserrat(fontStyle: FontStyle.italic),
-              ),
-            ),
-          ),
+          buildFingerprintButton(),
+          buildFingerprintSupportedText(),
         ],
+      ),
+    );
+  }
+
+  Align buildFingerprintSupportedText() {
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: Transform.translate(
+        offset: Offset(0, -85),
+        child: Text(
+          _supportState == SupportState.supported
+              ? isFingerPrint
+                  ? 'Fingerprint supported'
+                  : 'Fingerprint disabled'
+              : 'Fingerprint not Supported',
+          style: GoogleFonts.montserrat(fontStyle: FontStyle.italic),
+        ),
+      ),
+    );
+  }
+
+  Align buildFingerprintButton() {
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: Transform.translate(
+        offset: Offset(0, -100),
+        child: IconButton(
+          onPressed: () {
+            if (isFingerPrint) _authenticateWithBiometrics();
+          },
+          icon: Icon(
+            Icons.fingerprint,
+            size: 50,
+            color: isFingerPrint ? Colors.blueAccent : Colors.grey,
+          ),
+        ),
       ),
     );
   }
@@ -148,7 +157,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(15),
                 ),
-                labelText: 'Email',
+                labelText: StringConstants.email,
                 labelStyle: GoogleFonts.montserrat(),
               ),
               onChanged: (text) {
@@ -173,7 +182,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(15),
                 ),
-                labelText: 'Password',
+                labelText: StringConstants.password,
                 labelStyle: GoogleFonts.montserrat(),
               ),
               style: const TextStyle(fontSize: 14),
@@ -214,7 +223,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           return Colors.white;
                         }),
                       ),
-                      child: Text('Login', style: GoogleFonts.montserrat()),
+                      child: Text(
+                        StringConstants.login,
+                        style: GoogleFonts.montserrat(),
+                      ),
                     );
               },
             ),
@@ -227,7 +239,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ? Text(
                       data.isAuthenticated!
                           ? ''
-                          : 'Credential anda tidak sesuai, mohon coba kembali!',
+                          : StringConstants.credentialNotValid,
                       style: GoogleFonts.montserrat(
                         color: Colors.red,
                         fontSize: 17,
@@ -246,7 +258,7 @@ class _LoginScreenState extends State<LoginScreen> {
     bool authenticated = false;
     try {
       authenticated = await auth.authenticate(
-        localizedReason: 'Scan your fingerprint to authenticate',
+        localizedReason: StringConstants.fingerprintAuthenticateText,
         options: const AuthenticationOptions(
           stickyAuth: true,
           biometricOnly: true,

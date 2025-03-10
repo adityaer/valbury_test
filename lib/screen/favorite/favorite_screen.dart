@@ -51,43 +51,48 @@ class _FavoriteScreenState extends State<FavoriteScreen>
       ),
       body: TabBarView(
         controller: _tabController,
-        children: [
-          Consumer<PostNotifier>(
-            builder: (context, data, child) {
-              return ListView.builder(
-                itemBuilder: (_, index) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: PostItem(postModel: data.postFavoriteList[index]),
-                  );
-                },
-                itemCount: data.postFavoriteList.length,
-              );
-            },
-          ),
-          Consumer<AlbumNotifier>(
-            builder: (context, data, child) {
-              return GridView.builder(
-                itemCount: data.albumFavoriteList.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                ),
-                itemBuilder: (_, index) {
-                  return Padding(
-                    padding: const EdgeInsets.only(
-                      left: 10,
-                      right: 10,
-                      top: 10,
-                      bottom: 25,
-                    ),
-                    child: AlbumItem(albumModel: data.albumFavoriteList[index]),
-                  );
-                },
-              );
-            },
-          ),
-        ],
+        children: [buildPostFavoriteList(), buildAlbumFavoriteList()],
       ),
+    );
+  }
+
+  Consumer<AlbumNotifier> buildAlbumFavoriteList() {
+    return Consumer<AlbumNotifier>(
+      builder: (context, data, child) {
+        return GridView.builder(
+          itemCount: data.albumFavoriteList.length,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+          ),
+          itemBuilder: (_, index) {
+            return Padding(
+              padding: const EdgeInsets.only(
+                left: 10,
+                right: 10,
+                top: 10,
+                bottom: 25,
+              ),
+              child: AlbumItem(albumModel: data.albumFavoriteList[index]),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Consumer<PostNotifier> buildPostFavoriteList() {
+    return Consumer<PostNotifier>(
+      builder: (context, data, child) {
+        return ListView.builder(
+          itemBuilder: (_, index) {
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: PostItem(postModel: data.postFavoriteList[index]),
+            );
+          },
+          itemCount: data.postFavoriteList.length,
+        );
+      },
     );
   }
 }

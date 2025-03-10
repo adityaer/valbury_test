@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:valbury_test/constant/string_constant.dart';
 import 'package:valbury_test/screen/album/album_notifier.dart';
 import 'package:valbury_test/widget/album_item.dart';
 
@@ -38,7 +39,10 @@ class _AlbumScreenState extends State<AlbumScreen> {
       children: [
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Text('ALBUMS', style: GoogleFonts.montserrat(fontSize: 20)),
+          child: Text(
+            StringConstants.albumsCapitalized,
+            style: GoogleFonts.montserrat(fontSize: 20),
+          ),
         ),
         Expanded(
           child: Consumer<AlbumNotifier>(

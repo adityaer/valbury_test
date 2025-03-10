@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:valbury_test/constant/string_constant.dart';
 import 'package:valbury_test/screen/login/login_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -75,7 +76,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Biometric', style: GoogleFonts.montserrat(fontSize: 15)),
+                Text(StringConstants.fingerprint, style: GoogleFonts.montserrat(fontSize: 15)),
                 Switch(
                   value: isFingerPrint,
                   onChanged: (data) {
@@ -97,7 +98,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 );
               },
               child: Text(
-                'LOGOUT',
+                StringConstants.logout,
                 style: GoogleFonts.montserrat(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,

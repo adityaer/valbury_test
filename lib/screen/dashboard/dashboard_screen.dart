@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:valbury_test/constant/string_constant.dart';
 import 'package:valbury_test/helper/helper_online_status.dart';
 import 'package:valbury_test/screen/album/album_screen.dart';
 import 'package:valbury_test/screen/favorite/favorite_screen.dart';
@@ -29,11 +30,17 @@ class _DashboardScreenState extends State<DashboardScreen>
   ];
 
   final List<BottomNavigationBarItem> _bottomNavBarItems = [
-    BottomNavigationBarItem(icon: Icon(Icons.newspaper), label: 'Post'),
-    BottomNavigationBarItem(icon: Icon(Icons.image_outlined), label: 'Album'),
+    BottomNavigationBarItem(
+      icon: Icon(Icons.newspaper),
+      label: StringConstants.post,
+    ),
+    BottomNavigationBarItem(
+      icon: Icon(Icons.image_outlined),
+      label: StringConstants.album,
+    ),
     BottomNavigationBarItem(
       icon: Icon(Icons.bookmark_outline),
-      label: 'Favorite',
+      label: StringConstants.favorite,
     ),
   ];
 
@@ -82,7 +89,9 @@ class _DashboardScreenState extends State<DashboardScreen>
                   ),
                   SizedBox(width: 10),
                   Text(
-                    isConnectedToInternet ? 'Online' : 'Offline',
+                    isConnectedToInternet
+                        ? StringConstants.online
+                        : StringConstants.offline,
                     style: GoogleFonts.montserrat(),
                   ),
                 ],

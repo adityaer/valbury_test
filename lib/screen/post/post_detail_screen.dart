@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:valbury_test/constant/string_constant.dart';
 import 'package:valbury_test/domain/entity/post.dart';
 import 'package:valbury_test/screen/post/post_notifier.dart';
 
@@ -55,7 +56,10 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
             ),
             Spacer(),
             SizedBox(height: 20),
-            Text('Comments', style: GoogleFonts.montserrat(fontSize: 18)),
+            Text(
+              StringConstants.comments,
+              style: GoogleFonts.montserrat(fontSize: 18),
+            ),
             SizedBox(height: 10),
             SizedBox(height: 120, child: buildCommentList()),
           ],

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:valbury_test/constant/string_constant.dart';
 import 'package:valbury_test/screen/post/post_notifier.dart';
 import 'package:valbury_test/widget/post_item.dart';
 import 'package:provider/provider.dart';
@@ -38,7 +39,10 @@ class _PostscreenState extends State<Postscreen> {
       children: [
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Text('POSTS', style: GoogleFonts.montserrat(fontSize: 20)),
+          child: Text(
+            StringConstants.postsCapitalized,
+            style: GoogleFonts.montserrat(fontSize: 20),
+          ),
         ),
         Expanded(
           child: Consumer<PostNotifier>(

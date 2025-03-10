@@ -55,39 +55,7 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                     itemBuilder: (_, index) {
                       return Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(15),
-                            boxShadow: [
-                              BoxShadow(color: Colors.grey, blurRadius: 3),
-                            ],
-                          ),
-                          child: Column(
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(15),
-                                  topRight: Radius.circular(15),
-                                ),
-                                child: Image.network(
-                                  data.albumDetailList[index].albumImagePath ??
-                                      '',
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                              SizedBox(height: 10),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  data.albumDetailList[index].title ?? '',
-                                  style: GoogleFonts.montserrat(fontSize: 15),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                        child: buildAlbumDetailItem(data, index),
                       );
                     },
                   );
@@ -96,6 +64,39 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Container buildAlbumDetailItem(AlbumNotifier data, int index) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 3)],
+      ),
+      child: Column(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(15),
+              topRight: Radius.circular(15),
+            ),
+            child: Image.network(
+              data.albumDetailList[index].albumImagePath ?? '',
+              fit: BoxFit.cover,
+            ),
+          ),
+          SizedBox(height: 10),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              data.albumDetailList[index].title ?? '',
+              style: GoogleFonts.montserrat(fontSize: 15),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
       ),
     );
   }
